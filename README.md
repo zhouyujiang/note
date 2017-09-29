@@ -1,3 +1,5 @@
+# java基础
+
 ## java
 
 ### 引用传递和值传递
@@ -112,6 +114,8 @@ public class TestMain {
 
 修饰方法：声明独立于对象的静态方法，不能使用类的非静态变量。静态方法从参数列表得到数据，然后计算这些数据
 
+# 数据库
+
 ## oracle
 
 ### 取消connect权限
@@ -141,7 +145,7 @@ REVOKE SELECT ON *.* FROM 'pig'@'%';
 
 
 
-
+# 开发工具插件
 
 ## eclipse
 
@@ -166,10 +170,6 @@ REVOKE SELECT ON *.* FROM 'pig'@'%';
 </plugins>
 ```
 
-
-
-## tomcat
-
 ### 阿里云镜像
 
 ```
@@ -182,15 +182,39 @@ REVOKE SELECT ON *.* FROM 'pig'@'%';
 </mirror>
 ```
 
+# 服务器
+
 ## apache
 
 主配置文件 httpd.conf
+
+## Tomcat
+
+# 框架
 
 ## spring
 
 ### spring下载地址
 
 http://maven.springframework.org/release/org/springframework/spring/
+
+## mybatis
+
+### mybatis教程
+
+http://www.yiibai.com/mybatis/
+
+## shiro
+
+### shiro教程
+
+http://www.yiibai.com/shiro/
+
+
+
+![img](http://www.yiibai.com/uploads/images/201703/1403/660170344_46272.png)
+
+# linux
 
 ## linux
 
@@ -200,3 +224,8 @@ https://linux.cn/article-6160-1.html
 
 
 
+## mac
+
+### 虚拟机安装mac系统
+
+http://blog.csdn.net/hamber_bao/article/details/51335834
