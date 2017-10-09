@@ -69,6 +69,25 @@ public class ValueTest {
 
 3 抽象类是对对象共性的抽象，接口是行为自上而下的抽象。
 
+| 抽象类                              | 接口                                 |
+| -------------------------------- | ---------------------------------- |
+| 抽象类可以有抽象和非抽象方法。                  | 接口只能有抽象方法。 从Java 8开始，它也可以有默认和静态方法。 |
+| 抽象类不支持多重继承。                      | 接口支持多继承。                           |
+| 抽象类可以有`final`，`非final`，静态和非静态变量。 | 接口只有静态和`final`变量。                  |
+| 抽象类可以提供接口的实现。                    | 接口不能提供抽象类的实现。                      |
+| `abstract`关键字用来声明抽象类。            | `interface`关键字用于声明接口。              |
+
+### java访问修饰符
+
+| 访问修饰符     | 在类内  | 在包内  | 外部包只通过子类 | 外部包  |
+| --------- | ---- | ---- | -------- | ---- |
+| private   | Y    | N    | N        | N    |
+| default   | Y    | Y    | N        | N    |
+| protected | Y    | Y    | Y        | N    |
+| public    | Y    | Y    | Y        | Y    |
+
+
+
 ### main函数中的args数组
 
 创建类 命令行javac TestMain.java编译后，运行java TestMain aa bb cc dd  输出 hello aa   welcome bb
@@ -113,6 +132,215 @@ public class TestMain {
 修饰变量：无论实例化多少对象，静态变量只有一份拷贝，局部变量不能声明为static
 
 修饰方法：声明独立于对象的静态方法，不能使用类的非静态变量。静态方法从参数列表得到数据，然后计算这些数据
+
+tips： 非static方法中可以有static字段和非static字段， static方法中只能有static字段
+
+### char在java中为什么占两个字节
+
+这是因为java使用`Unicode`系统而非`ASCII`码系统编码
+
+### JDK JRE JVM之间的区别
+
+jdk是java开发工具包 = jre + 开发工具
+
+jre是java运行时环境，是jvm的实现
+
+jvm是java虚拟机提供java字节码运行的环境主要用来加载代码， 验证代码， 执行代码， 提供运行时环境![110090359_45736](C:\Users\zsummer\Desktop\110090359_45736.png)
+
+### java静态绑定和动态绑定
+
+静态绑定：编译时确定对象的类型，如果在类中有任何private， static， final方法，则有静态绑定
+
+```
+class Dog {
+    private void eat() {
+        System.out.println("dog is eating...");
+    }
+
+    public static void main(String args[]) {
+        Dog d1 = new Dog();
+        d1.eat();
+    }
+}
+```
+
+动态绑定：在运行时确定对象的类型
+
+```
+class Animal {
+    void eat() {
+        System.out.println("animal is eating...");
+    }
+}
+
+class Dog extends Animal {
+    void eat() {
+        System.out.println("dog is eating...");
+    }
+
+    public static void main(String args[]) {
+        Animal a = new Dog();
+        a.eat();
+    }
+}
+```
+
+### instanceof 运算符
+
+对具有null值的变量使用instanceof运算符返回false
+
+```
+class Dog2 {
+    public static void main(String args[]) {
+        Dog2 d = null;
+        System.out.println(d instanceof Dog2);// false
+    }
+}
+```
+
+### java对象克隆
+
+对象克隆是创建对象精确副本的方法， Object的clone（）方法用于克隆对象，被克隆的对象必须实现java.lang.Cloneable接口
+
+```
+class Student18 implements Cloneable {
+    int rollno;
+    String name;
+
+    Student18(int rollno, String name) {
+        this.rollno = rollno;
+        this.name = name;
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    public static void main(String args[]) {
+        try {
+            Student18 s1 = new Student18(101, "amit");
+
+            Student18 s2 = (Student18) s1.clone();
+
+            System.out.println(s1.rollno + " " + s1.name);
+            System.out.println(s2.rollno + " " + s2.name);
+
+        } catch (CloneNotSupportedException c) {
+        }
+
+    }
+}
+```
+
+
+
+### java设计模式
+
+#### 单利模式
+
+SingleObject.java
+
+```
+public class SingleObject {
+
+	private static SingleObject singleObject = new SingleObject();
+	
+	public static SingleObject getInstance() {
+		return singleObject;
+	}
+	
+	public void say() {
+		System.out.println("i am singleton!");
+	}
+}
+```
+
+Main.java
+
+```
+public class Main {
+	public static void main(String[] args) {
+		SingleObject object = SingleObject.getInstance();
+		object.say();
+	}
+}
+```
+
+
+
+#### 工厂模式
+
+Shape.java
+
+```
+public interface Shape {
+	public void draw();
+}
+```
+
+Triangle.java
+
+```
+public class Triangle implements Shape {
+	@Override
+	public void draw() {
+		// TODO Auto-generated method stub
+		System.out.println("draw triangle!");
+	}
+}
+```
+
+Circle.java
+
+```
+public class Circle implements Shape{
+	@Override
+	public void draw() {
+		// TODO Auto-generated method stub
+		System.out.println("draw circle!");
+	}
+}
+```
+
+ShapeFactory.java
+
+```
+public class ShapeFactory {
+
+	public Shape getShape(String name) {
+		if (name == null) {
+			return null;
+		} else if (name.equalsIgnoreCase("circle")) {
+			return new Circle();
+		} else if (name.equalsIgnoreCase("triangle")) {
+			return new Triangle();
+		}
+		return null;
+	}
+}
+```
+
+使用工厂
+
+```
+	/**
+	 * 测试工厂模式
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		ShapeFactory factory = new ShapeFactory();
+		Shape shape = factory.getShape("circle");
+		shape.draw();
+		
+		Shape shape2 = factory.getShape("triangle");
+		shape2.draw();
+		
+	}
+		
+}
+```
+
+
 
 # 数据库
 
@@ -203,6 +431,33 @@ http://maven.springframework.org/release/org/springframework/spring/
 ### mybatis教程
 
 http://www.yiibai.com/mybatis/
+
+### mybatis配置文件的environments标签的default属性
+
+environments标签可以配置多个environment标签， 使用default属性告诉mybatis当前使用的environment 如果default属性根据environment的id属性找不到对应的id则可能会抱下面的错误
+
+```
+Exception in thread "main" org.apache.ibatis.exceptions.PersistenceException: 
+### Error opening session.  Cause: java.lang.NullPointerException
+### Cause: java.lang.NullPointerException
+	at org.apache.ibatis.exceptions.ExceptionFactory.wrapException(ExceptionFactory.java:26)
+	at org.apache.ibatis.session.defaults.DefaultSqlSessionFactory.openSessionFromDataSource(DefaultSqlSessionFactory.java:91)
+	at org.apache.ibatis.session.defaults.DefaultSqlSessionFactory.openSession(DefaultSqlSessionFactory.java:46)
+	at com.yibai.mybatis.test.HelloMybatis.main(HelloMybatis.java:32)
+Caused by: java.lang.NullPointerException
+	at org.apache.ibatis.session.defaults.DefaultSqlSessionFactory.openSessionFromDataSource(DefaultSqlSessionFactory.java:86)
+	... 2 more
+```
+
+### mybatis 使用utf8编码
+
+配置文件中i添加？后边的内容
+
+```
+<property name="url" value="jdbc:mysql://127.0.0.1:3306/yibai?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull"/>
+```
+
+
 
 ## shiro
 
