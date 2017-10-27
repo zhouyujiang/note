@@ -135,6 +135,21 @@ public class TestMain {
 
 tips： 非static方法中可以有static字段和非static字段， static方法中只能有static字段
 
+### ^运算符
+
+```
+计算6^3 结果为5，^表示异或 即相异为1
+6=110
+3=011
+6^3 = 110^011 = 101 = 5
+```
+
+### 移位运算符“>>” "<<" ">>>>"
+
+```
+10>>3 相当于吧10的二进制数左移3位， 结果转换成十进制数就是10乘以2的3次方
+```
+
 ### char在java中为什么占两个字节
 
 这是因为java使用`Unicode`系统而非`ASCII`码系统编码
@@ -197,6 +212,77 @@ class Dog2 {
     }
 }
 ```
+
+### 输出字符的assic码值
+
+A---Z ---a---z assic由大到小 Z与a之间还有一些特殊符号 比如‘[’
+
+```
+System.out.println(Integer.valueOf('a'));
+System.out.println(Integer.valueOf('z'));
+System.out.println(Integer.valueOf('A'));
+System.out.println(Integer.valueOf('Z'));
+
+char c = 92;
+System.out.println(c);
+
+/*** 控制台输出结果为 ***/
+97
+122
+65
+90
+\
+```
+
+### String的equals方法的实现
+
+```
+public boolean equals(Object anObject) {
+        if (this == anObject) {
+            return true;
+        }
+        if (anObject instanceof String) {
+            String anotherString = (String)anObject;
+            int n = value.length;
+            if (n == anotherString.value.length) {
+                char v1[] = value;
+                char v2[] = anotherString.value;
+                int i = 0;
+                while (n-- != 0) {
+                    if (v1[i] != v2[i])
+                        return false;
+                    i++;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+```
+
+### String的 == 比较
+
+```
+/**
+	 * == 比较的是栈中的内容是否相同， 基本数据类型存储在栈中，引用类型的地址存储在栈中，内容存储在堆中。
+	 * String重写了hashCode方法 所以这里返回的hashCode值相同 但是实际上地址是不同的 ，所以使用==时返回false 但是hashCode 却相等
+	 * 使用字面量创建字符串的时候，会先到字符串缓冲池中寻找是否有相同的字符串，如果有则直接指向该字符串，如果没有则重新创建。而使用new关键字 则会直接重新创建。
+	 */
+	public static void run4() {
+		String str1 = "ab";
+		String str2 = "ab";
+		String str3 = new String(str1);
+		
+		System.out.println(str1 == str2); // true
+		System.out.println(str1 == str3); // false
+		
+		System.out.println(str1.hashCode()); // 3105
+		System.out.println(str2.hashCode()); // 3105
+		System.out.println(str3.hashCode()); // 3105
+	}
+```
+
+
 
 ### java对象克隆
 
@@ -340,11 +426,32 @@ public class ShapeFactory {
 }
 ```
 
+### 线程的生命周期
 
+![img](http://www.yiibai.com/uploads/images/201704/1304/832110400_15852.jpg)
+
+### 线程优先级
+
+java线程优先级在1-10（MIN_PRIORITY-MAXPRIORITY）默认优先级为5（NORM_PRIORITY）,线程优先级并不能保证线程的执行顺序。
 
 # 数据库
 
 ## oracle
+
+### 三种数据库读数问题和四种隔离级别
+
+脏读：一个事务读取另一个事务未提交的数据
+
+不可重复读（虚读）：一个事务在另一个事务提交前后读取的记录数值不一样（update）
+
+幻读：一个事务在另一个事务提交前后读取的记录个数不一样（insert delete）
+
+| 隔离级别                   | 脏读（dirty read） | 不可重复读（noRepeatable read） | 幻读（phantom read） |
+| ---------------------- | -------------- | ------------------------ | ---------------- |
+| 未提交读（read uncommitted） | 可能             | 可能                       | 可能               |
+| 已提交读（read committed）   | 不可能            | 可能                       | 可能               |
+| 可重复读（repeatable read）  | 不可能            | 不可能                      | 可能               |
+| 可串行化（serializable）     | 不可能            | 不可能                      | 不可能              |
 
 ### 取消connect权限
 
@@ -371,7 +478,126 @@ REVOKE privilege ON database.table FROM 'username@host'
 REVOKE SELECT ON *.* FROM 'pig'@'%';
 ```
 
+### mysql两种引擎的区别InnoDB和MyIASM
 
+MyIASM是mydql默认的引擎; InnoDB是事务安全的，MyIASM是非事务安全的；InnoDB锁的粒度是行级的，MyIASM是表级的；InnoDB不支持全文索引，MyIASM支持全文索引；MyIASM相对简单，效率低，适合小型应用，MyIASM保存成文件形式，跨平台更方便
+
+### mysql information_schema数据库的一些用途
+
+该库中有tables表存着	所有的表信息 包括其他库的表的信息 所有可以通过下面的语句读取表信息
+
+```
+SELECT 
+    table_name
+FROM
+    information_schema.tables
+```
+
+### 根据特定列比较两个表 找到不匹配的记录
+
+思路： 将两个表做一次union all 操作 然后根据特定列分组，计算每个分组的count 如果为2则是相同数据 如果为1则是不匹配数据，常用于数据库的迁移
+
+```
+select col_name1, col_name2
+from (select col_name1, col_name2 from t1 union all select col_name1, col_name2 from t2 ) t group by t.col_name1, t.col_name2 having count(*) = 1 
+```
+
+### 使用delete join语句 删除重复的行 重复的行保留最大id
+
+```
+DELETE t1 
+FROM contacts t1
+INNER JOIN contacts t2 
+WHERE  t1.id < t2.id AND t1.email = t2.email;
+```
+
+### mysql查看表的列信息
+
+```
+show columns from tablename
+```
+
+### linux下打开mysql服务
+
+```
+sudo service mysql start
+```
+
+### 数据库表重命名
+
+```
+// 三种方式 ，个人喜欢第二种
+RENAME TABLE tablename TO newtablename
+ALTER TABLE tablename RENAME newtablename
+ALTER TABLE tablename RENAME TO newtablename
+```
+
+### 修改表结构
+
+```
+// 喜欢用第二种 ，使用first 可以将该列至于最前边
+ALTER TABLE 表名 ADD COLUMN 列名字 数据类型 约束；
+ALTER TABLE 表名 ADD 列名字 数据类型 约束；
+```
+
+
+
+### 加载外部sql文件 
+
+使用source关键字 和sql文件路径
+
+```
+mysql> source e://example/example.sql
+```
+
+### mysql的几种约束
+
+1 主键：定义主键的方式有三种
+
+```
+// 第一种
+create table employee(
+	id int primary key,
+	name varchar(255)
+)
+// 第二种
+create table employee(
+	id int,
+	name varchar(255),
+	constraint emp_pk primary key (id)
+)
+// 第三种 复合主键
+create table employee(
+	id int,
+	name varchar(255),
+	constraint emp_pk prinary key(id, name) // emp_pk 是主键的名字
+)
+```
+
+2 默认值约束 使用default 关键字
+
+3 唯一约束 unique
+
+```
+create table employee(
+	id int primary key,
+	name varchar(255),
+	unique(name)
+)
+```
+
+4 外键约束 foreign key
+
+```
+create table employee(
+	id int primary key,
+	name varchar(255),
+	dept_id int,
+	constraint dept_fk foreign key (dept_id) references dept(id) // dept(id)表示dept表的id字段
+)
+```
+
+5 非空约束 not null
 
 # 开发工具插件
 
@@ -476,6 +702,28 @@ http://www.yiibai.com/shiro/
 ### 26个linux常用指令
 
 https://linux.cn/article-6160-1.html
+
+### linux 快捷键
+
+| 按键            | 作用                       |
+| ------------- | ------------------------ |
+| Ctrl+d        | 键盘输入结束或退出终端              |
+| Ctrl+s        | 暂停当前程序，暂停后按下任意键恢复运行      |
+| Ctrl+z        | 将当前程序放到后台运行，恢复到前台为命令`fg` |
+| Ctrl+a        | 将光标移至输入行头，相当于`Home`键     |
+| Ctrl+e        | 将光标移至输入行末，相当于`End`键      |
+| Ctrl+k        | 删除从光标所在位置到行末             |
+| Alt+Backspace | 向前删除一个单词                 |
+| Shift+PgUp    | 将终端显示向上滚动                |
+| Shift+PgDn    | 将终端显示向下滚动                |
+
+### 指令
+
+```
+$ who am i 
+$ whoami 当前登录用户
+$ who -m
+```
 
 
 
