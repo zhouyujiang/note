@@ -450,6 +450,15 @@ java线程优先级在1-10（MIN_PRIORITY-MAXPRIORITY）默认优先级为5（NO
 
 ## eclipse
 
+### 快捷键
+
+```
+ctrl + shift + p      跳转到对应的括号
+
+ctrl + alt + H 找到选中方法被调用的位置，并生成调用树
+ctrl + shift + G 找到该方法被调用的位置。
+```
+
 ## maven
 
 ### 改变maven jdk版本

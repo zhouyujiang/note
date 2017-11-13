@@ -60,6 +60,46 @@ tips： 如果一个文件或者目录以.开始，则表示是一个隐藏文�
 
 ### 忘记密码的解决办法
 
+### linux文件基本属性
+
+```
+[root@localhost /]# ls -l
+total 64
+d(文件类型，‘d’表示目录， ‘-’表示文件)r-x（属主权限）r-x（属组权限）r-x（other权限）   2（文件链接个数） root（属主） root（属组） 4096（文件的长度） Dec 14  2012（最后修改日期） bin（文件名或路径名）
+dr-xr-xr-x   4 root root 4096 Apr 19  2012 boot
+……
+```
+
+### chgrp, chown, chmod指令 
+
+1、修改属组
+
+​	chgrp -[R] 属组名 文件名
+
+2、修改属主
+
+​	 chown -[R] 属主名 文件名 或 chown -[R] 属主名:属组名 文件名 
+
+3、修改权限
+
+​	chmod -[R] xyz文件或目录 chmod -[R]  （u g o a）+/- （r w x） 
+
+### 虚拟机网络桥接模式分配linux ip地址
+
+1、vi /etc/sysconfig/network-scripts/ifcfg-eth0
+
+2、修改ONBOOT=yes
+
+3 、service network restart
+
+### 处理目录常用命令
+
+ls, cd, pwd, mkdir, rmdir, cp, rm
+
+##### ls
+
+
+
 
 
 
