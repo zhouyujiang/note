@@ -457,6 +457,7 @@ ctrl + shift + p      跳转到对应的括号
 
 ctrl + alt + H 找到选中方法被调用的位置，并生成调用树
 ctrl + shift + G 找到该方法被调用的位置。
+F4  查看typeHierachy继承树 
 ```
 
 ## maven
