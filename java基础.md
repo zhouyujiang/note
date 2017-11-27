@@ -334,38 +334,6 @@ class Student18 implements Cloneable {
 
 ### java设计模式
 
-#### 单利模式
-
-SingleObject.java
-
-```
-public class SingleObject {
-
-	private static SingleObject singleObject = new SingleObject();
-	
-	public static SingleObject getInstance() {
-		return singleObject;
-	}
-	
-	public void say() {
-		System.out.println("i am singleton!");
-	}
-}
-```
-
-Main.java
-
-```
-public class Main {
-	public static void main(String[] args) {
-		SingleObject object = SingleObject.getInstance();
-		object.say();
-	}
-}
-```
-
-
-
 #### 工厂模式
 
 Shape.java
@@ -500,6 +468,42 @@ F4  查看typeHierachy继承树
 主配置文件 httpd.conf
 
 ## Tomcat
+
+### tomcat的多种部署方式
+
+​	热加载和热部署可以提高开发阶段的效率，配置的属性为：
+
+​	热加载：reloadabel = "true"  (不清空session，不释放内存)
+
+​	热部署：autoDeploy = "true" （清空session，释放内存）
+
+* 直接将web项目拷贝到webapps目录下
+
+* 修改server.xml：在conf文夹下下找到server.xml文件，打开找到Host标签，在里边添加如下代码
+
+  ```
+  <!-- 
+  	path:app访问路径
+  	docBase:app路径
+  	reloadabel：开发阶段一般设置为true，方便开发，发布阶段一般设置为false，提高程序访问速度
+  -->
+  <Context path="/appPath" docBase="F:\work\appPath\WebRoot"  reloadable ="true"debug="0" 		privileged="true">
+  </Context> 
+  ```
+
+* 在conf/catalina/localhost 目录下添加配置文件 xxx.xml
+
+  ```
+  <!-- 
+  	app访问路径为xxx（配置文件名字）
+  	docBase:app路径
+  	reloadabel：开发阶段一般设置为true，方便开发，发布阶段一般设置为false，提高程序访问速度
+  -->
+  <Context docBase="F:\work\appPath\WebRoot"  reloadable ="true"debug="0" 			privileged="true">
+  </Context> 
+  ```
+
+  ​
 
 # 框架
 

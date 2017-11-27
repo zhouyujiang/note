@@ -25,6 +25,32 @@ revoke connect from user
 
 Tools-》Editor-》AutoReplace-》Edit
 
+### 死锁
+
+死锁一般是因为事务之间锁冲突造成的，是一种拙略的事务设计
+
+死锁的解决方法：查看死锁进程，并杀死进程
+
+```
+查看锁表进程SQL语句1： 
+select sess.sid, 
+   sess.serial#, 
+   lo.oracle_username, 
+   lo.os_user_name, 
+   ao.object_name, 
+   lo.locked_mode 
+   from v$locked_object lo, 
+   dba_objects ao, 
+   v$session sess 
+where ao.object_id = lo.object_id and lo.session_id = sess.sid; 
+
+查看锁表进程SQL语句2： 
+select * from v$session t1, v$locked_object t2 where t1.sid = t2.SESSION_ID; 
+
+杀掉锁表进程： 
+alter system kill session 'sid,serial#'; 
+```
+
 ## mysql
 
 ### 授权，撤销权限
